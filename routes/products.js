@@ -7,12 +7,15 @@ import {
   updateProduct,
   createProductReview,
   getTopProducts,
-} from "../controllers/productController.js";
-import { isUserAuthorized, isAdmin } from "../middleware/authMiddleware.js";
+} from "../controllers/products.js";
+import { isUserAuthorized, isAdmin } from "../middleware/auth.js";
 
 const router = express.Router();
 
-router.route("/").get(getProducts).post(isUserAuthorized, isAdmin, createProduct);
+router
+  .route("/")
+  .get(getProducts)
+  .post(isUserAuthorized, isAdmin, createProduct);
 router.route("/:id/reviews").post(isUserAuthorized, createProductReview);
 router.get("/top", getTopProducts);
 

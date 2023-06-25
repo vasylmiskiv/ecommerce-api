@@ -6,15 +6,20 @@ import {
   getMyOrders,
   getOrders,
   updateOrderToDelivered,
-} from "../controllers/orderController.js";
-import { isUserAuthorized, isAdmin } from "../middleware/authMiddleware.js";
+} from "../controllers/orders.js";
+import { isUserAuthorized, isAdmin } from "../middleware/auth.js";
 
 const router = express.Router();
 
-router.route("/").post(isUserAuthorized, addOrderItems).get(isUserAuthorized, isAdmin, getOrders);
+router
+  .route("/")
+  .post(isUserAuthorized, addOrderItems)
+  .get(isUserAuthorized, isAdmin, getOrders);
 router.route("/myorders").get(isUserAuthorized, getMyOrders);
 router.route("/:id").get(isUserAuthorized, getOrderById);
 router.route("/:id/pay").put(isUserAuthorized, updateOrderToPaid);
-router.route("/:id/deliver").put(isUserAuthorized, isAdmin, updateOrderToDelivered);
+router
+  .route("/:id/deliver")
+  .put(isUserAuthorized, isAdmin, updateOrderToDelivered);
 
 export default router;
