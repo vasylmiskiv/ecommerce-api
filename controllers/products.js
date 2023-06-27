@@ -39,7 +39,7 @@ class ProductController {
   getProductById = asyncHandler(async (req, res) => {
     const { id } = req.params;
 
-    const product = await this.productService.getProduct(id);
+    const product = await this.productService.getProductById(id);
 
     if (product) {
       res.json(product);
