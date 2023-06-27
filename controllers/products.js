@@ -1,151 +1,142 @@
 import asyncHandler from "express-async-handler";
-import Product from "../models/product.js";
 
-const getProducts = asyncHandler(async (req, res) => {
-  const pageSize = 8;
-  const page = Number(req.query.pageNumber) || 1;
-  const keyword = req.query.keyword
-    ? {
-        name: {
-          $regex: req.query.keyword,
-          $options: "i",
-        },
-      }
-    : {};
-
-  const count = await Product.countDocuments({ ...keyword });
-
-  const products = await Product.find({ ...keyword })
-    .limit(pageSize)
-    .skip(pageSize * (page - 1));
-
-  res.json({ products, page, pages: Math.ceil(count / pageSize) });
-});
-
-const getProductById = asyncHandler(async (req, res) => {
-  const product = await Product.findById(req.params.id);
-  if (product) {
-    res.json(product);
-  } else {
-    res.status(404);
-    throw new Error("Product not found");
+class ProductController {
+  constructor(productService) {
+    this.productService = productService;
   }
-});
 
-const deleteProduct = asyncHandler(async (req, res) => {
-  const product = await Product.findById(req.params.id);
+  getProducts = asyncHandler(async (req, res) => {
+    const pageSize = 8;
+    const page = Number(req.query.pageNumber) || 1;
+    const keyword = req.query.keyword
+      ? {
+          name: {
+            $regex: req.query.keyword,
+            $options: "i",
+          },
+        }
+      : {};
 
-  if (product) {
-    await product.remove();
-    res.json({ message: `${product.name} has been removed` });
-  } else {
-    res.status(404);
-    throw new Error("Product not find");
-  }
-});
-
-const createProduct = asyncHandler(async (req, res) => {
-  const { name, price, description, image, brand, category, countInStock } =
-    req.body;
-
-  const product = new Product({
-    name: name,
-    price: price,
-    user: req.user._id,
-    image: image,
-    brand: brand,
-    category: category,
-    countInStock: countInStock,
-    numReviews: 0,
-    description: description,
-  });
-
-  const createdProduct = await product.save();
-
-  res.status(201).json(createdProduct);
-});
-
-const updateProduct = asyncHandler(async (req, res) => {
-  const {
-    _id,
-    name,
-    price,
-    description,
-    image,
-    brand,
-    category,
-    countInStock,
-  } = req.body;
-
-  const product = await Product.findById(req.body._id);
-
-  if (product) {
-    (product._id = _id), (product.name = name);
-    product.price = price;
-    product.description = description;
-    product.image = image;
-    product.brand = brand;
-    product.category = category;
-    product.countInStock = countInStock;
-
-    const updatedProduct = await product.save();
-
-    res.json({ message: `${updatedProduct.name} has been updated` });
-  } else {
-    res.status(404);
-    throw new Error("Product not found");
-  }
-});
-
-const createProductReview = asyncHandler(async (req, res) => {
-  const { rating, comment } = req.body;
-
-  const product = await Product.findById(req.params.id);
-
-  if (product) {
-    const alreadyReviewed = product.reviews.find(
-      (r) => r.user.toString() === req.user._id.toString()
+    const allProductsAmount = await this.productService.allProductsAmount(
+      keyword
     );
 
-    if (alreadyReviewed) {
-      res.status(400);
-      throw new Error("Product already reviewed");
+    const productsPerPage = await this.productService.getProductsPerPage(
+      keyword,
+      pageSize,
+      page
+    );
+
+    console.log(productsPerPage);
+
+    res.json({
+      products: productsPerPage,
+      page,
+      pages: Math.ceil(allProductsAmount / pageSize),
+    });
+  });
+
+  getProductById = asyncHandler(async (req, res) => {
+    const { id } = req.params;
+
+    const product = await this.productService.getProduct(id);
+
+    if (product) {
+      res.json(product);
+    } else {
+      res.status(404);
+      throw new Error("Product not found");
     }
+  });
 
-    const review = {
-      name: req.user.name,
-      rating: Number(rating),
-      comment,
+  deleteProduct = asyncHandler(async (req, res) => {
+    const product = await this.productService.getProductById(id);
+
+    if (product) {
+      await product.remove();
+      res.json({ message: `${product.name} has been removed` });
+    } else {
+      res.status(404);
+      throw new Error("Product not find");
+    }
+  });
+
+  createProduct = asyncHandler(async (req, res) => {
+    const { name, price, description, image, brand, category, countInStock } =
+      req.body;
+
+    const newProduct = await this.productService({
+      name: name,
+      price: price,
       user: req.user._id,
-    };
+      image: image,
+      brand: brand,
+      category: category,
+      countInStock: countInStock,
+      numReviews: 0,
+      description: description,
+    });
 
-    product.reviews.push(review);
-    product.numReviews = product.reviews.length;
-    product.rating =
-      product.reviews.reduce((acc, item) => item.rating + acc, 0) /
-      product.numReviews;
+    res.status(201).json(newProduct);
+  });
 
-    await product.save();
+  updateProduct = asyncHandler(async (req, res) => {
+    const {
+      _id,
+      name,
+      price,
+      description,
+      image,
+      brand,
+      category,
+      countInStock,
+    } = req.body;
 
-    res.status(201).json({ message: "Your review has been added" });
-  } else {
-    res.status(404);
-    throw new Error("Product not found");
-  }
-});
+    const updatedProduct = await this.productService.updateProduct({
+      _id,
+      name,
+      price,
+      description,
+      image,
+      brand,
+      category,
+      countInStock,
+    });
 
-const getTopProducts = asyncHandler(async (req, res) => {
-  const products = await Product.find({}).sort({ rating: -1 }).limit(3);
+    if (updatedProduct) {
+      res.json({ message: `${updatedProduct.name} has been updated` });
+    } else {
+      res.status(404);
+      throw new Error("Product not found");
+    }
+  });
 
-  res.json(products);
-});
+  createProductReview = asyncHandler(async (req, res) => {
+    const { id: productId } = req.params;
+    const { rating, comment } = req.body;
+    const { _id: userId, name } = req.user;
 
-export {
-  getProductById,
-  getProducts,
-  deleteProduct,
-  createProduct,
-  updateProduct,
-  createProductReview,
-  getTopProducts,
-};
+    const createdProductReview = await this.productService.createProductReview(
+      productId,
+      userId,
+      name,
+      rating,
+      comment
+    );
+
+    if (createdProductReview) {
+      res.status(201).json({ message: "Your review has added" });
+    } else {
+      res.status(404);
+      throw new Error("Product not found");
+    }
+  });
+
+  getTopProducts = asyncHandler(async (req, res) => {
+    const topProducts = await this.productService.getTopProducts();
+
+    res.json(topProducts);
+  });
+}
+
+export default ProductController;

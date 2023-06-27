@@ -22,6 +22,8 @@ class UserRepository {
 
     return user.save();
   };
+
+  getUsers = () => User.find({});
 }
 
 export default UserRepository;

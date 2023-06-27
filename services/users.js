@@ -28,6 +28,10 @@ class UserService {
   updateUser = (user, updates) => {
     return this.userRepository.updateUser(user, updates);
   };
+
+  getUsers = () => {
+    return this.userRepository.getUsers();
+  };
 }
 
 export default UserService;
