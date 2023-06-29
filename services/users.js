@@ -1,3 +1,5 @@
+import User from "../models/user.js";
+
 class UserService {
   constructor(userRepository) {
     this.userRepository = userRepository;
@@ -25,8 +27,18 @@ class UserService {
     return this.userRepository.findUserByEmail(email);
   };
 
-  updateUser = (user, updates) => {
-    return this.userRepository.updateUser(user, updates);
+  updateUser = (userToUpdate) => {
+    return this.userRepository.updateUser(userToUpdate);
+  };
+
+  deleteUser = (userId) => {
+    const user = findUserById(userId);
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    return this.userRepository.deleteUser(userId);
   };
 
   getUsers = () => {

@@ -27,8 +27,6 @@ class ProductController {
       page
     );
 
-    console.log(productsPerPage);
-
     res.json({
       products: productsPerPage,
       page,
@@ -57,7 +55,7 @@ class ProductController {
       res.json({ message: `${product.name} has been removed` });
     } else {
       res.status(404);
-      throw new Error("Product not find");
+      throw new Error("Product not founnd");
     }
   });
 
@@ -77,7 +75,12 @@ class ProductController {
       description: description,
     });
 
-    res.status(201).json(newProduct);
+    if (newProduct) {
+      res.status(201).json(newProduct);
+    } else {
+      res.status(404);
+      throw new Error("Product creating failed");
+    }
   });
 
   updateProduct = asyncHandler(async (req, res) => {

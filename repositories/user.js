@@ -3,24 +3,25 @@ import User from "../models/user.js";
 class UserRepository {
   findUserByEmail = (email) => User.findOne({ email });
 
-  createUser = (name, email, password) =>
-    User.create({
+  findUserById = (userId) => User.findById(userId).select("-password");
+
+  findUserProfileById = (userId) => User.findById(userId);
+
+  createUser = (name, email, password) => {
+    return User.create({
       name,
       email,
       password,
     });
+  };
 
-  findUserById = (userId) => User.findById(userId).select("-password");
+  updateUser = async (userToUpdate) =>
+    User.findByIdAndUpdate(userToUpdate._id, userToUpdate, {
+      new: true,
+    });
 
-  updateUser = (user, updates) => {
-    user.name = updates.name || user.name;
-    user.email = updates.email || user.email;
-
-    if (updates.password) {
-      user.password = updates.password;
-    }
-
-    return user.save();
+  deleteUser = (userId) => {
+    User.findByIdAndRemove(userId);
   };
 
   getUsers = () => User.find({});

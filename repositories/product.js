@@ -11,18 +11,18 @@ class ProductRepository {
 
   getProductById = (id) => Product.findById(id);
 
-  createProduct = (product) => {
-    return new Product(product).save();
+  createProduct = (productToCreate) => {
+    return new Product(productToCreate).save();
   };
 
-  updateProudct = (product) => {
-    return Product.findByIdAndUpdate(updated._id, updated, {
+  updateProduct = (productToUpdate) => {
+    return Product.findByIdAndUpdate(productToUpdate._id, productToUpdate, {
       new: true,
     });
   };
 
-  createProductReview = (product) => {
-    return product.save();
+  createProductReview = (productReviewToUpdate) => {
+    return productReviewToUpdate.save();
   };
 
   getTopProducts = () => {

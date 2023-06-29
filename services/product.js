@@ -19,21 +19,18 @@ class ProductService {
     return this.productRepository.createProduct(newProduct);
   };
 
-  updateProudct = (updatedProuduct) => {
-    return this.productRepository.updateProduct(updatedProuduct);
+  updateProduct = (productToUpdate) => {
+    return this.productRepository.updateProduct(productToUpdate);
   };
 
-  createProductReview = (productId, userId, name, rating, comment) => {
-    const product = this.productRepository.getProductById(productId);
-
-    if (!product) throw new Error("Product not found");
+  createProductReview = async (productId, userId, name, rating, comment) => {
+    const product = await this.productRepository.getProductById(productId);
 
     const alreadyReviewed = product.reviews.find(
-      (r) => r.user.toString() === req.user._id.toString()
+      (r) => r.user.toString() === userId.toString()
     );
 
     if (alreadyReviewed) {
-      res.status(400);
       throw new Error("Product already reviewed");
     }
 

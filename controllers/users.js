@@ -2,9 +2,9 @@ import asyncHandler from "express-async-handler";
 import generateToken from "../utils/generateToken.js";
 import User from "../models/user.js";
 
-import { AuthUserDto } from "../dto/AuthUser.dto.js";
-import { RegisterUserDto } from "../dto/RegisterUser.dto.js";
-import { UpdateUserDto } from "../dto/UpdateUser.dto.js";
+import { AuthUserDto } from "../dto/user/AuthUser.dto.js";
+import { RegisterUserDto } from "../dto/user/RegisterUser.dto.js";
+import { UpdateUserDto } from "../dto/user/UpdateUser.dto.js";
 
 class UserController {
   constructor(userService) {
@@ -13,9 +13,7 @@ class UserController {
 
   authUser = asyncHandler(async (req, res) => {
     const { email, password } = req.body;
-
     const authUserDto = new AuthUserDto(email, password);
-
     const user = await this.userService.authUser(authUserDto);
 
     if (user) {
@@ -34,9 +32,7 @@ class UserController {
 
   registerUser = asyncHandler(async (req, res) => {
     const { name, email, password } = req.body;
-
     const registerUserDto = new RegisterUserDto(name, email, password);
-
     const userExists = await this.userService.findUserByEmail(email);
 
     if (userExists) {
@@ -44,9 +40,9 @@ class UserController {
       throw new Error("User already exists");
     }
 
-    const user = await this.userService.createUser(registerUserDto);
+    const newUser = await this.userService.createUser(registerUserDto);
 
-    if (user) {
+    if (newUser) {
       res.status(201).json({
         _id: newUser._id,
         name: newUser.name,
@@ -77,18 +73,12 @@ class UserController {
   });
 
   updateUserProfile = asyncHandler(async (req, res) => {
-    const { name, email, password } = req.body;
-
+    const { id: userId, name, email, password } = req.body;
     const updateUserDto = new UpdateUserDto(name, email, password);
 
-    const user = await this.userService.findUserById(req.body._id);
+    const updatedUser = await userService.updateUser(userId, updateUserDto);
 
-    if (user) {
-      const updatedUser = await this.userService.updateUser(
-        user,
-        updateUserDto
-      );
-
+    if (updatedUser) {
       res.status(200).json({
         _id: updatedUser._id,
         name: updatedUser.name,
@@ -111,19 +101,14 @@ class UserController {
   deleteUser = asyncHandler(async (req, res) => {
     const { id: userId } = req.params;
 
-    const user = await this.userService.findUserById(userId);
+    await this.userService.deleteUser(userId);
 
-    if (user) {
-      user.remove();
-      res.json({ message: `User ${userId} has been removed` });
-    } else {
-      res.status(404);
-    }
+    res.json({ message: `User ${userId} has been removed` });
   });
 
   getUserById = asyncHandler(async (req, res) => {
     const { id: userId } = req.params;
-    const user = await User.findById(req.params.id).select("-password");
+    const user = await User.findById(userId).select("-password");
 
     if (user) {
       res.json(user);
@@ -133,17 +118,11 @@ class UserController {
   });
 
   updateUser = asyncHandler(async (req, res) => {
-    const { id: userId } = req.params;
+    const userToUpdate = req.body;
 
-    const user = await this.userService.findUserById(userId);
+    const updatedUser = await this.userService.updateUser(userToUpdate);
 
-    if (user) {
-      user.name = req.body.name || user.name;
-      user.email = req.body.email || user.email;
-      user.isAdmin = req.body.isAdmin;
-
-      const updatedUser = await user.save();
-
+    if (updatedUser) {
       res.json({
         _id: updatedUser._id,
         name: updatedUser.name,
