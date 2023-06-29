@@ -1,6 +1,5 @@
 import asyncHandler from "express-async-handler";
 import generateToken from "../utils/generateToken.js";
-import User from "../models/user.js";
 
 import { AuthUserDto } from "../dto/user/AuthUser.dto.js";
 import { RegisterUserDto } from "../dto/user/RegisterUser.dto.js";
@@ -73,10 +72,10 @@ class UserController {
   });
 
   updateUserProfile = asyncHandler(async (req, res) => {
-    const { id: userId, name, email, password } = req.body;
-    const updateUserDto = new UpdateUserDto(name, email, password);
+    const { id, name, email, password } = req.body;
+    const updateUserDto = new UpdateUserDto(id, name, email, password);
 
-    const updatedUser = await userService.updateUser(userId, updateUserDto);
+    const updatedUser = await this.userService.updateUserProfile(updateUserDto);
 
     if (updatedUser) {
       res.status(200).json({
@@ -108,7 +107,8 @@ class UserController {
 
   getUserById = asyncHandler(async (req, res) => {
     const { id: userId } = req.params;
-    const user = await User.findById(userId).select("-password");
+
+    const user = await this.userService.findUserById(userId);
 
     if (user) {
       res.json(user);

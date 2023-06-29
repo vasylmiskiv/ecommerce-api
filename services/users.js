@@ -27,12 +27,29 @@ class UserService {
     return this.userRepository.findUserByEmail(email);
   };
 
+  updateUserProfile = async (userProfileToUpdate) => {
+    const user = await this.findUserById(userProfileToUpdate._id);
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    user.name = userProfileToUpdate.name;
+    user.email = userProfileToUpdate.email;
+
+    if (userProfileToUpdate.password) {
+      user.password = userProfileToUpdate.password;
+    }
+
+    return this.userRepository.updateUserProfile(user);
+  };
+
   updateUser = (userToUpdate) => {
     return this.userRepository.updateUser(userToUpdate);
   };
 
   deleteUser = (userId) => {
-    const user = findUserById(userId);
+    const user = this.findUserById(userId);
 
     if (!user) {
       throw new Error("User not found");

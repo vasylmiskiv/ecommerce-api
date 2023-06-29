@@ -15,12 +15,8 @@ class ProductService {
     return this.productRepository.getProductById(id);
   };
 
-  createProduct = (newProduct) => {
-    return this.productRepository.createProduct(newProduct);
-  };
-
-  updateProduct = (productToUpdate) => {
-    return this.productRepository.updateProduct(productToUpdate);
+  createProduct = (user, productToCreate) => {
+    return this.productRepository.createProduct(user, productToCreate);
   };
 
   createProductReview = async (productId, userId, name, rating, comment) => {
@@ -48,6 +44,14 @@ class ProductService {
       product.numReviews;
 
     return this.productRepository.createProductReview(product);
+  };
+
+  updateProduct = (productToUpdate) => {
+    return this.productRepository.updateProduct(productToUpdate);
+  };
+
+  deleteProduct = (id) => {
+    return this.productRepository.deleteProduct(id);
   };
 
   getTopProducts = () => {

@@ -11,9 +11,12 @@ class ProductRepository {
 
   getProductById = (id) => Product.findById(id);
 
-  createProduct = (productToCreate) => {
-    return new Product(productToCreate).save();
+  createProductReview = (productReviewToUpdate) => {
+    return productReviewToUpdate.save();
   };
+
+  createProduct = (user, productToCreate) =>
+    new Product({ ...productToCreate, user }).save();
 
   updateProduct = (productToUpdate) => {
     return Product.findByIdAndUpdate(productToUpdate._id, productToUpdate, {
@@ -21,9 +24,7 @@ class ProductRepository {
     });
   };
 
-  createProductReview = (productReviewToUpdate) => {
-    return productReviewToUpdate.save();
-  };
+  deleteProduct = (productId) => Product.findByIdAndDelete(productId);
 
   getTopProducts = () => {
     return Product.find({}).sort({ rating: -1 }).limit(3);

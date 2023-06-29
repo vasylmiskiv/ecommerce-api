@@ -1,5 +1,7 @@
 import asyncHandler from "express-async-handler";
 
+import { CreateProductDto } from "../dto/product/CreateProduct.dto.js";
+
 class ProductController {
   constructor(productService) {
     this.productService = productService;
@@ -48,10 +50,11 @@ class ProductController {
   });
 
   deleteProduct = asyncHandler(async (req, res) => {
+    const { id } = req.params;
     const product = await this.productService.getProductById(id);
 
     if (product) {
-      await product.remove();
+      await this.productService.deleteProduct(id);
       res.json({ message: `${product.name} has been removed` });
     } else {
       res.status(404);
@@ -63,17 +66,24 @@ class ProductController {
     const { name, price, description, image, brand, category, countInStock } =
       req.body;
 
-    const newProduct = await this.productService({
-      name: name,
-      price: price,
-      user: req.user._id,
-      image: image,
-      brand: brand,
-      category: category,
-      countInStock: countInStock,
-      numReviews: 0,
-      description: description,
-    });
+    const user = req.user._id;
+
+    console.log(description);
+
+    const createProductDto = new CreateProductDto(
+      name,
+      price,
+      description,
+      image,
+      brand,
+      category,
+      countInStock
+    );
+
+    const newProduct = await this.productService.createProduct(
+      user,
+      createProductDto
+    );
 
     if (newProduct) {
       res.status(201).json(newProduct);

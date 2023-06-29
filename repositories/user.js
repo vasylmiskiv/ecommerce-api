@@ -7,22 +7,21 @@ class UserRepository {
 
   findUserProfileById = (userId) => User.findById(userId);
 
-  createUser = (name, email, password) => {
-    return User.create({
+  createUser = (name, email, password) =>
+    User.create({
       name,
       email,
       password,
     });
-  };
 
-  updateUser = async (userToUpdate) =>
+  updateUserProfile = (user) => user.save();
+
+  updateUser = (userToUpdate) =>
     User.findByIdAndUpdate(userToUpdate._id, userToUpdate, {
       new: true,
     });
 
-  deleteUser = (userId) => {
-    User.findByIdAndRemove(userId);
-  };
+  deleteUser = (userId) => User.findByIdAndDelete(userId);
 
   getUsers = () => User.find({});
 }

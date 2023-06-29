@@ -1,15 +1,18 @@
 import express from "express";
 import dotenv from "dotenv";
-import connectDB from "./config/db.js";
+import path from "path";
+import morgan from "morgan";
+import cors from "cors";
 import colors from "colors";
+
+import connectDB from "./config/db.js";
+
 import { notFound, errorHandler } from "./middleware/error.js";
+
 import productRoutes from "./routes/products.js";
 import userRoutes from "./routes/users.js";
 import orderRoutes from "./routes/orders.js";
 import uploadRoutes from "./routes/uploads.js";
-import path from "path";
-import morgan from "morgan";
-import cors from "cors";
 
 dotenv.config();
 
@@ -23,7 +26,7 @@ if (process.env.NODE_ENV === "development") {
 
 const corsOptions = {
   origin: "*",
-  credentials: true, //access-control-allow-credentials:true
+  credentials: true,
   optionSuccessStatus: 200,
 };
 
