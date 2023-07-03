@@ -18,8 +18,8 @@ class ProductRepository {
   createProduct = (user, productToCreate) =>
     new Product({ ...productToCreate, user }).save();
 
-  updateProduct = (productToUpdate) => {
-    return Product.findByIdAndUpdate(productToUpdate._id, productToUpdate, {
+  updateProduct = (productId, productToUpdate) => {
+    return Product.findByIdAndUpdate(productId, productToUpdate, {
       new: true,
     });
   };

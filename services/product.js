@@ -19,7 +19,13 @@ class ProductService {
     return this.productRepository.createProduct(user, productToCreate);
   };
 
-  createProductReview = async (productId, userId, name, rating, comment) => {
+  createProductReview = async ({
+    productId,
+    userId,
+    name,
+    rating,
+    comment,
+  }) => {
     const product = await this.productRepository.getProductById(productId);
 
     const alreadyReviewed = product.reviews.find(
@@ -46,8 +52,8 @@ class ProductService {
     return this.productRepository.createProductReview(product);
   };
 
-  updateProduct = (productToUpdate) => {
-    return this.productRepository.updateProduct(productToUpdate);
+  updateProduct = (productId, productToUpdate) => {
+    return this.productRepository.updateProduct(productId, productToUpdate);
   };
 
   deleteProduct = (id) => {

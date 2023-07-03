@@ -1,7 +1,8 @@
 import asyncHandler from "express-async-handler";
 
 import { CreateProductDto } from "../dto/product/CreateProduct.dto.js";
-
+import { UpdateProductDto } from "../dto/product/UpdateProduct.dto.js";
+import { CreateProductReviewDto } from "../dto/product/CreateProductReview.dto.js";
 class ProductController {
   constructor(productService) {
     this.productService = productService;
@@ -68,8 +69,6 @@ class ProductController {
 
     const user = req.user._id;
 
-    console.log(description);
-
     const createProductDto = new CreateProductDto(
       name,
       price,
@@ -105,16 +104,20 @@ class ProductController {
       countInStock,
     } = req.body;
 
-    const updatedProduct = await this.productService.updateProduct({
-      _id,
+    const updateProductDto = new UpdateProductDto(
       name,
       price,
       description,
       image,
       brand,
       category,
-      countInStock,
-    });
+      countInStock
+    );
+
+    const updatedProduct = await this.productService.updateProduct(
+      _id,
+      updateProductDto
+    );
 
     if (updatedProduct) {
       res.json({ message: `${updatedProduct.name} has been updated` });
@@ -129,12 +132,16 @@ class ProductController {
     const { rating, comment } = req.body;
     const { _id: userId, name } = req.user;
 
-    const createdProductReview = await this.productService.createProductReview(
+    const createProductReviewDto = new CreateProductReviewDto(
       productId,
       userId,
       name,
       rating,
       comment
+    );
+
+    const createdProductReview = await this.productService.createProductReview(
+      createProductReviewDto
     );
 
     if (createdProductReview) {
