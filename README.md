@@ -1,6 +1,7 @@
 ## [MERN Full Stack app](https://stackstore.onrender.com/)
-
-### [Attention: Separate server folder from my MERN Full Stack app](https://github.com/vasylmiskiv/fullstack-ecommerceapp)
+### Attention: 
+### [Separate server folder from my MERN Full Stack app](https://github.com/vasylmiskiv/fullstack-ecommerceapp)
+### [Client (LATEST)](https://github.com/vasylmiskiv/ecommerce-client)
 
 ### Run
 
