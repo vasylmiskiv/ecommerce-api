@@ -11,8 +11,8 @@ class ProductRepository {
 
   getProductById = (id) => Product.findById(id);
 
-  createProductReview = (productReviewToUpdate) => {
-    return productReviewToUpdate.save();
+  createProductReview = (productReviewToCreate) => {
+    return productReviewToCreate.save();
   };
 
   createProduct = (user, productToCreate) =>
