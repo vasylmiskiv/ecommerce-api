@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "start": "node server",
+    "start:aws": "JWT_SECRET='abc123' MONGO_URL='mongodb+srv://user123:user123@appdb.bx5ut.mongodb.net/turboshop?retryWrites=true&w=majority' NODE_ENV='development' PORT='8080' npm run start",
     "server": "nodemon server",
     "client": "npm start",
     "dev": "concurrently \"npm run server\"",
