@@ -15,7 +15,7 @@ const orderController = new OrderController(orderService);
 router
   .route("/")
   .post(isUserAuthorized, orderController.addOrderItems)
-  .get(isUserAuthorized, isAdmin, orderController.getOrders);
+  .get(isUserAuthorized, isAdmin, orderController.getAllOrders);
 router.route("/myorders").get(isUserAuthorized, orderController.getMyOrders);
 router.route("/:id").get(isUserAuthorized, orderController.getOrderById);
 router

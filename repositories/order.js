@@ -12,6 +12,14 @@ class OrderRepository {
   updateOrderStatus = (orderToUpdate) => {
     return orderToUpdate.save();
   };
+
+  getMyOrders = (userId) => {
+    return Order.find({ user: userId });
+  };
+
+  getAllOrders = () => {
+    return Order.find({});
+  };
 }
 
 export default OrderRepository;

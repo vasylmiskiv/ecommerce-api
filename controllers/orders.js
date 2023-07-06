@@ -3,7 +3,7 @@ import Order from "../models/order.js";
 
 import { AddOrderItemsDto } from "../dto/order/AddOrderItems.dto.js";
 import { UpdateProductDto } from "../dto/product/UpdateProduct.dto.js";
-import { UpdateOrderToPaid } from "../dto/order/UpdateOrderToPaid.dto.js";
+import { UpdateOrderToPaidDto } from "../dto/order/UpdateOrderToPaid.dto.js";
 
 class OrderController {
   constructor(orderService) {
@@ -19,21 +19,21 @@ class OrderController {
       taxPrice,
       shippingPrice,
       totalPrice,
-      userId,
+      customer,
     } = req.body;
 
-    const user = userId._id;
+    const user = customer._id;
 
     const addOrderItemsDto = new AddOrderItemsDto(
-      orderItems,
       user,
+      orderItems,
       shippingAddress,
       paymentMethod,
       itemsPrice,
       taxPrice,
       shippingPrice,
       totalPrice,
-      userId
+      customer
     );
 
     if (orderItems && !orderItems.length) {
@@ -67,7 +67,7 @@ class OrderController {
   updateOrderToPaid = asyncHandler(async (req, res) => {
     const { id, status, update_time, email_address } = req.body;
 
-    const updateOrderToPaidDto = new UpdateOrderToPaid(
+    const updateOrderToPaidDto = new UpdateOrderToPaidDto(
       id,
       status,
       update_time,
@@ -87,15 +87,10 @@ class OrderController {
   });
 
   updateOrderToDelivered = asyncHandler(async (req, res) => {
-    
-
-    const updatedOrderToDelivered = await this.orderService.updateOrderToPaid(req.params.id);
+    const updatedOrderToDelivered =
+      await this.orderService.updateOrderToDelivered(req.params.id);
 
     if (updatedOrderToDelivered) {
-      
-
-      const updateOrder = await order.save();
-
       res.json(updatedOrderToDelivered);
     } else {
       res.status(404);
@@ -104,13 +99,13 @@ class OrderController {
   });
 
   getMyOrders = asyncHandler(async (req, res) => {
-    const orders = await Order.find({ user: req.user._id });
+    const orders = await this.orderService.getMyOrders(req.user._id);
 
     res.json(orders);
   });
 
-  getOrders = asyncHandler(async (req, res) => {
-    const orders = await Order.find({});
+  getAllOrders = asyncHandler(async (req, res) => {
+    const orders = await this.orderService.getAllOrders();
 
     res.json(orders);
   });

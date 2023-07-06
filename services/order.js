@@ -29,6 +29,14 @@ class OrderService {
 
     return this.orderRepository.updateOrder(order);
   };
+
+  getMyOrders = (userId) => {
+    return this.orderRepository.getMyOrders(userId);
+  };
+
+  getAllOrders = () => {
+    return this.orderRepository.getAllOrders();
+  };
 }
 
 export default OrderService;

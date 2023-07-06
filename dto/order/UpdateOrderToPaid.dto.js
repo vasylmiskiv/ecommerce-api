@@ -1,4 +1,4 @@
-export class UpdateOrderToPaid {
+export class UpdateOrderToPaidDto {
   constructor(id, status, update_time, email_address) {
     this.id = id;
     this.status = status;
