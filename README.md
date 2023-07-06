@@ -2,7 +2,8 @@
 
 ### [Client](https://github.com/vasylmiskiv/ecommerce-client)
 
-### Attention: 
+### Attention: Server deployed on a free cloud platform you should wait for 30 seconds until it works
+
 ### [Separate server folder from my MERN Full Stack app](https://github.com/vasylmiskiv/fullstack-ecommerceapp)
 
 ### Run
