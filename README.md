@@ -1,7 +1,10 @@
-## [MERN Full Stack app](https://stackstore.onrender.com/)
+## [MERN Full Stack app](https://vmiskivecommerce-api.onrender.com) 
 ### Attention: 
 ### [Separate server folder from my MERN Full Stack app](https://github.com/vasylmiskiv/fullstack-ecommerceapp)
 ### [Client (LATEST)](https://github.com/vasylmiskiv/ecommerce-client)
+
+Sample working data to get:
+`https://vmiskivecommerce-api.onrender.com/api/products`
 
 ### Run
 
