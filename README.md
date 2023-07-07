@@ -9,7 +9,7 @@
 ### Run
 1. Download or clone the project
 2. Open the project
-3. Inside in root folder install packages `npm install` or `yarn`
+3. In the root folder install packages `npm install` or `yarn`
 4. Run the project `npm run start`
 5. Done. Server is started and listening port 8080 (documentation will be ASAP)
 
