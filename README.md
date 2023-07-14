@@ -27,7 +27,7 @@ Sample working data to get:
 
 ---
 
-<img src="https://w7.pngwing.com/pngs/925/447/png-transparent-express-js-node-js-javascript-mongodb-node-js-text-trademark-logo.png" alt="expressjs" width = 100px>
+<img src="https://ibb.co/Dz7vr8n" alt="expressjs" width = 100px>
 <br/>
 <img src="https://cdn.freebiesupply.com/logos/large/2x/nodejs-1-logo-svg-vector.svg"  alt="nodejs" width = 100px >
 <br/>
