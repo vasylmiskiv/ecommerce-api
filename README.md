@@ -27,7 +27,7 @@ Sample working data to get:
 
 ---
 
-<img src="https://ibb.co/Dz7vr8n" alt="expressjs" width = 100px>
+<img src="https://i.ibb.co/HBrbhxQ/express.png" alt="expressjs" width = 100px>
 <br/>
 <img src="https://cdn.freebiesupply.com/logos/large/2x/nodejs-1-logo-svg-vector.svg"  alt="nodejs" width = 100px >
 <br/>
